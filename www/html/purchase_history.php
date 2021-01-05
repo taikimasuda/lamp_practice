@@ -16,14 +16,11 @@ $user = get_login_user($db);
 
 $token = get_csrf_token();
 
-if (is_valid_csrf_token($token)) {
-    if (is_admin($user) === false) {
-        $histories = get_user_history($db, $user['user_id']);
-    } else {
-        $histories = get_user_history($db);
-    }
+if (is_admin($user) === false) {
+    $histories = get_user_history($db, $user['user_id']);
 } else {
-    set_error('不正な操作が行われました');
+    $histories = get_user_history($db);
 }
+
 
 include_once VIEW_PATH . 'purchase_history_view.php';
