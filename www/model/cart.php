@@ -202,3 +202,93 @@ function create_history($db, $carts) {
   return true;
 }
 
+function get_user_history($db, $user_id = NULL) {
+  $params = [];
+  $sql = "
+    SELECT 
+      history.history_id,
+      datetime,
+      sum(price * amount) as total_price
+    FROM
+      history
+    JOIN
+      details
+    ON
+      history.history_id = details.history_id
+    ";
+    if ($user_id !== NULL) {
+      $params[] = $user_id;
+      $sql .= "
+        WHERE
+          history.user_id = ?
+        ";
+    }
+    $sql .= "
+    GROUP BY
+      history.history_id
+    ORDER BY
+      datetime desc
+  ";
+  return fetch_all_query($db, $sql, $params);
+}
+
+function get_user_details($db, $history_id, $user_id=NUll) {
+  $params = [$history_id];
+  $sql = "
+    SELECT 
+      name,
+      details.price,
+      amount,
+      details.price * amount as total_price
+    FROM
+      history
+    JOIN
+      details
+    ON
+      history.history_id = details.history_id
+    JOIN
+      items
+    ON
+      details.product_id = items.item_id
+    WHERE
+      details.history_id = ?
+    ";
+    if ($user_id !== NULL) {
+      $params[] = $user_id;
+      $sql .= "
+        AND
+          history.user_id = ?
+        ";
+    }
+  return fetch_all_query($db, $sql, $params);
+}
+
+function get_details_top($db, $history_id, $user_id = NULL) {
+  $params = [$history_id];
+  $sql = "
+    SELECT 
+      history.history_id,
+      datetime,
+      sum(price * amount) as total_price
+    FROM
+      history
+    JOIN
+      details
+    ON
+      history.history_id = details.history_id
+    WHERE
+      details.history_id = ?
+    ";
+    if ($user_id !== NULL) {
+      $params[] = $user_id;
+      $sql .= "
+        AND
+          history.user_id = ?
+        ";
+    }
+    $sql .= "
+    GROUP BY
+      details.history_id
+  ";
+  return fetch_query($db, $sql, $params);
+}
