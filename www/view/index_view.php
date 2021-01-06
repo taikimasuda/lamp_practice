@@ -40,6 +40,27 @@
         </div>
       <?php } ?>
       </div>
+      <h2>売上ランキングベスト3</h2>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>順位</th>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>画像</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($rankings as $ranking){ ?>
+          <tr>        
+            <td><?php print(h($ranking['rank'])); ?></td>
+            <td><?php print(h($ranking['name'])); ?></td>
+            <td><?php print(number_format(h($ranking['price']))); ?>円</td>
+            <td><img class="card-img" src="<?php print(IMAGE_PATH . h($ranking['image'])); ?>"></td>
+          </tr>
+          <?php } ?>
+        </tbody>
+      </table>
     </div>
   </div>
   
