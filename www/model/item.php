@@ -236,24 +236,29 @@ function get_ranking($db)
     name,
     items.price,
     image,
-   (
-      select count(*)
-      from (select sum(amount) as total from details group by product_id) as t2 
-      where total >= t1.total
-    ) as rank ,
-    total
+    SUM(amount) as total
   FROM
-   (select product_id, sum(amount) as total from details group by product_id) as t1 
+    details  
   JOIN
   	items
   ON
-    items.item_id = t1.product_id
+    items.item_id = product_id
   GROUP BY
     product_id
   ORDER BY 
-    rank
+    SUM(amount) DESC
    LIMIT
    3
   ";
-  return fetch_all_query($db, $sql);
+  $data = fetch_all_query($db, $sql);
+  $rank = 0;
+  $prev = NULL;
+  foreach ($data as $key => $value) {
+    if ($prev === NULL || $value['total'] < $prev) {
+      $rank ++;
+    }
+    $data[$key]['rank'] = $rank;
+    $prev = $value['total'];
+  }
+  return $data;
 }

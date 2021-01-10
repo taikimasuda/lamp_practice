@@ -16,4 +16,5 @@ $rankings = get_ranking($db);
 
 $items = get_open_items($db);
 
+
 include_once VIEW_PATH . 'index_view.php';

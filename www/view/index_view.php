@@ -56,7 +56,7 @@
             <td><?php print(h($ranking['rank'])); ?></td>
             <td><?php print(h($ranking['name'])); ?></td>
             <td><?php print(number_format(h($ranking['price']))); ?>円</td>
-            <td><img class="card-img" src="<?php print(IMAGE_PATH . h($ranking['image'])); ?>"></td>
+            <td><img class="rank-img" src="<?php print(IMAGE_PATH . h($ranking['image'])); ?>"></td>
           </tr>
           <?php } ?>
         </tbody>
